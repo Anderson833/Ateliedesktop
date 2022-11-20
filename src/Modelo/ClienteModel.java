@@ -27,7 +27,7 @@ public class ClienteModel {
 
    
     public String toString() {
-        return String.valueOf(getCodCli());
+        return String.valueOf(getNome());
     }
     
      //Métodos get e set

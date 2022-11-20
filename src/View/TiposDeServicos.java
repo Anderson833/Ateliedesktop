@@ -3,11 +3,17 @@
  */
 package View;
 
+import Conexao.Conexao_BD;
 import Dao.ClienteDao;
 import Dao.TiposDeServicosDao;
 import Modelo.ClienteModel;
 import Modelo.TiposDeServicosModel;
 import java.awt.Event;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -16,15 +22,17 @@ import javax.swing.table.DefaultTableModel;
  */
 public class TiposDeServicos extends javax.swing.JFrame {
 
+    
+    
     /**
      * Creates new form TiposDeServicos
      */
     public TiposDeServicos() {
         initComponents();
-        
+          
           //Abrir no centro da tela;
         setLocationRelativeTo(this);
-        
+        //Método para escolhe os códigos dos clientes
         exibirJcamboxCliente();
      
     }
@@ -58,6 +66,8 @@ public class TiposDeServicos extends javax.swing.JFrame {
         btAlterar = new javax.swing.JButton();
         txtCod = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
+        txtCodCli = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         tabTipoServicos = new javax.swing.JTable();
 
@@ -142,7 +152,7 @@ public class TiposDeServicos extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("Informe Nome:");
+        jLabel1.setText("Escolha o Cliente:");
 
         txtDescricao.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -180,8 +190,16 @@ public class TiposDeServicos extends javax.swing.JFrame {
 
         jLabel5.setText("Total:");
 
-        jComboBoxCliente.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Escolha o Cliente:" }));
+        jComboBoxCliente.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Selecione Nome:" }));
+        jComboBoxCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxClienteActionPerformed(evt);
+            }
+        });
         jComboBoxCliente.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jComboBoxClienteKeyPressed(evt);
+            }
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 jComboBoxClienteKeyReleased(evt);
             }
@@ -223,85 +241,99 @@ public class TiposDeServicos extends javax.swing.JFrame {
             }
         });
 
-        jLabel8.setText("Código:");
+        txtCod.setEditable(false);
+
+        jLabel8.setText("Código Tipo Serviço:");
+
+        txtCodCli.setEditable(false);
+
+        jLabel9.setText("Código Cliente:");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(158, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtData, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jComboBoxCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(38, 38, 38)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtCodCli, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(41, 41, 41)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtQtd, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(txtUnit, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(0, 0, Short.MAX_VALUE)))
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(30, 30, 30)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtCod, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(txtDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtCod, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtQtd, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(46, 46, 46)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtUnit, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(btAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(74, 74, 74)
                         .addComponent(btDeleta, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 100, Short.MAX_VALUE)
                         .addComponent(btAlterar, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(77, 77, 77)
                         .addComponent(btLista, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(158, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(32, 32, 32)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(32, 32, 32)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(1, 1, 1)))
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBoxCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jComboBoxCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtCodCli, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(txtQtd, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtUnit, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtCod, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                    .addComponent(txtUnit, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(30, 30, 30)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, 15, Short.MAX_VALUE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(15, 15, 15)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtData, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtCod, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(36, 36, 36)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -346,8 +378,8 @@ public class TiposDeServicos extends javax.swing.JFrame {
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addGap(87, 87, 87)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 853, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(131, Short.MAX_VALUE))
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 853, Short.MAX_VALUE)
+                .addGap(131, 131, 131))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -363,9 +395,11 @@ public class TiposDeServicos extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
- 
+    
     // Variavel para receber  o código do tipo de serviço
      String codigotiposervico="";
+     // Variável para armazenar o nome do cliente
+     String NomeCliente="";
     
     private void txtTotalKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTotalKeyReleased
         
@@ -428,7 +462,7 @@ public class TiposDeServicos extends javax.swing.JFrame {
             if(evt.getKeyCode()==evt.VK_RIGHT){
              txtUnit.requestFocus();
          }
-          
+           // condição para limpar o campo do valor total 
             if(txtQtd.getText().equals("")&&txtUnit.getText().equals("")){
                 txtTotal.setText("");
             }
@@ -473,6 +507,7 @@ public class TiposDeServicos extends javax.swing.JFrame {
            if(evt.getKeyCode()==evt.VK_RIGHT){
              txtDescricao.requestFocus();
          }
+        
     }//GEN-LAST:event_jComboBoxClienteKeyReleased
 
     private void txtDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDataActionPerformed
@@ -495,7 +530,11 @@ public class TiposDeServicos extends javax.swing.JFrame {
 
     private void btAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAddActionPerformed
          //Essa ação vai adicionar os dados no banco de dados
-         //Método que adiconarr os dados no banco de dados
+         
+         //Antes de adicionar vai seta o código do cliente pelo nome do cliente escolhido
+         setaCodigoDoCliente();
+         
+         //Método que adicionar os dados no banco de dados
          addTipoServicos();
     }//GEN-LAST:event_btAddActionPerformed
 
@@ -507,15 +546,32 @@ public class TiposDeServicos extends javax.swing.JFrame {
 
     private void btAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAlterarActionPerformed
         // Essa ação vai alterar o tipo de serviço
+        
+        // Condição para saber se nome do cliente foi escolhido
+         if(jComboBoxCliente.getSelectedIndex()==0){
+             JOptionPane.showMessageDialog(null, "Por favor Selecioner o nome do cliente!","Aviso:",JOptionPane.INFORMATION_MESSAGE);
+           jComboBoxCliente.requestFocus();
+         }else{
+               
+         //Antes de alterar vai seta o código do cliente pelo nome do cliente escolhido
+         setaCodigoDoCliente();
+         
+        
         //Método para alterar o tipo de serviço
         alterarTipoDeServico();
+         }
+      
     }//GEN-LAST:event_btAlterarActionPerformed
-
+  
+     
+    
     private void tabTipoServicosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabTipoServicosMouseClicked
-       
-           //Seta os valores nos campos de textos ao clicar na linha da tabela;
-        if (tabTipoServicos.getSelectedRow() != -1) {
 
+        
+           //Condição para saber se a linha está vazia
+        if (tabTipoServicos.getSelectedRow() != -1) {
+             // Ao clicar em uma linha com mouse vai seta os dados  nos seus  campos especificos 
+          txtCodCli.setText(tabTipoServicos.getValueAt(tabTipoServicos.getSelectedRow(), 1).toString());
             txtCod.setText(tabTipoServicos.getValueAt(tabTipoServicos.getSelectedRow(), 0).toString());
             txtDescricao.setText(tabTipoServicos.getValueAt(tabTipoServicos.getSelectedRow(), 2).toString());
             txtQtd.setText(tabTipoServicos.getValueAt(tabTipoServicos.getSelectedRow(), 3).toString());
@@ -523,11 +579,40 @@ public class TiposDeServicos extends javax.swing.JFrame {
             txtTotal.setText(tabTipoServicos.getValueAt(tabTipoServicos.getSelectedRow(), 5).toString());
             txtData.setText(tabTipoServicos.getValueAt(tabTipoServicos.getSelectedRow(), 6).toString());
            
-          
+      
         }
-
+           // A variável vai armazenar o código do tipo de serviço
           codigotiposervico=txtCod.getText();
+         funcao();
     }//GEN-LAST:event_tabTipoServicosMouseClicked
+
+    //Método para realiza a escolha o nome do cliente ao clicar com mouse
+     public void funcao(){
+         // Método para lista o nome do cliente no banco de dados
+               setaNomeDoCliente();
+               // Um loço de repetição para lista todos indexs do jcomboxCliente
+              for (int i = 0; i < jComboBoxCliente.getMaximumRowCount();i++) {
+            // armazenando todos nomes na variavel nomes
+           String nomes=""+  jComboBoxCliente.getItemAt(i);
+           // Condição para saber se o nome do cliente esta no banco de dados e é igual o que estive setado no campo de texto
+             if(nomes.equalsIgnoreCase(NomeCliente)){
+                 
+              //   System.out.println(i);
+              //setando o index do nome e exibindo o nome na JcomboxCliente
+                  jComboBoxCliente.setSelectedIndex(i);
+                   
+             }
+         }
+     }
+    
+    private void jComboBoxClienteKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jComboBoxClienteKeyPressed
+    
+    }//GEN-LAST:event_jComboBoxClienteKeyPressed
+
+    private void jComboBoxClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxClienteActionPerformed
+       // seta código do cliente
+        setaCodigoDoCliente();
+    }//GEN-LAST:event_jComboBoxClienteActionPerformed
     
     //Método para adicionar no banco de dados
      public void addTipoServicos(){
@@ -536,7 +621,7 @@ public class TiposDeServicos extends javax.swing.JFrame {
          // Uma instância da classe TiposDeServicosModel criando um objeto
          TiposDeServicosModel add = new TiposDeServicosModel();
          //Passando os atributos do tipos de serviços
-         add.setCodCliente(jComboBoxCliente.getSelectedItem().toString());
+         add.setCodCliente(txtCodCli.getText());
          add.setDescricao(txtDescricao.getText());
          add.setQtd(Integer.parseInt(txtQtd.getText()));
          add.setValorUnit(Double.parseDouble(txtUnit.getText()));
@@ -592,7 +677,7 @@ public class TiposDeServicos extends javax.swing.JFrame {
          // Uma instância da classe TiposDeServicosModel criando um objeto
          TiposDeServicosModel deleta = new TiposDeServicosModel();
         // Passando o código no parâmentro
-         deleta.setCodTipoServicos(txtQtd.getText());
+         deleta.setCodTipoServicos(txtCod.getText());
          // Passando o objeto do modelo para o objeto dao
          daoTds.deletaTipoDeServico(deleta);
     }
@@ -604,18 +689,84 @@ public class TiposDeServicos extends javax.swing.JFrame {
          // Uma instância da classe TiposDeServicosModel criando um objeto
          TiposDeServicosModel altera = new TiposDeServicosModel();
          // PASSANDO OS DADOS NOS PARÂMENTROS NO OBJETO TiposDeServicosModel
-         altera.setCodCliente(jComboBoxCliente.getSelectedItem().toString());
+         altera.setCodCliente(txtCodCli.getText());
          altera.setDescricao(txtDescricao.getText());
          altera.setQtd(Integer.parseInt(txtQtd.getText()));
          altera.setValorUnit(Double.parseDouble(txtUnit.getText()));
          altera.setValorTotal(Double.parseDouble(txtTotal.getText()));
          altera.setData(txtData.getText());
          //Passando o código do tipo de serviço para alterar 
-         altera.setCodTipoServicos(codigotiposervico);
+         altera.setCodTipoServicos(txtCod.getText());
          //Pssando o objeto TiposDeServicos para o objeto TiposDeServicosDao
          daoTds.atualizarTipoDeServico(altera);
      }
     
+       //Método para seta o código do cliente pelo nome escolhido
+    public void setaCodigoDoCliente() {
+
+        try {
+            Connection Conn = Conexao_BD.getConnection();
+            //Comando para lista código do cliente pelo nome escolhido
+            String sql = "SELECT codCli FROM cliente WHERE nome='"+jComboBoxCliente.getSelectedItem().toString() + "'";
+
+            PreparedStatement Patm = Conn.prepareStatement(sql);
+         
+            ResultSet Rst = Patm.executeQuery();
+
+            while (Rst.next()) {
+              
+                //seta no campo de texto
+                txtCodCli.setText( Rst.getString("codCli"));
+            }
+            //Fechando conexão ResultSet;
+            Rst.close();
+
+            //Fechando conexão PreparedStatement;
+            Patm.close();
+
+            //Fechando conexão Connection;
+            Conn.close();
+
+        } catch (SQLException e) {
+            //caso de error mostrar essa mensagem;
+           JOptionPane.showMessageDialog(null, "Código do cliente não setado! ");
+        }
+
+    }
+  
+     //Método para seta nome do cliente
+    public void setaNomeDoCliente() {
+
+        try {
+            Connection Conn = Conexao_BD.getConnection();
+            //Comando para lista nome do cliente pelo código
+            String sql = "SELECT nome FROM cliente WHERE codCli='"+txtCodCli.getText() + "'";
+
+            PreparedStatement Patm = Conn.prepareStatement(sql);
+         
+            ResultSet Rst = Patm.executeQuery();
+
+            while (Rst.next()) {
+                //Pegando o código do cliente
+                NomeCliente = Rst.getString("nome");
+             }
+            //Fechando conexão ResultSet;
+            Rst.close();
+
+            //Fechando conexão PreparedStatement;
+            Patm.close();
+
+            //Fechando conexão Connection;
+            Conn.close();
+
+        } catch (SQLException e) {
+            //caso de error mostrar essa mensagem;
+           JOptionPane.showMessageDialog(null, "Código do cliente não setado! ");
+        }
+
+    }
+
+     
     public static void main(String args[]) {
      
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -639,6 +790,7 @@ public class TiposDeServicos extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -649,6 +801,7 @@ public class TiposDeServicos extends javax.swing.JFrame {
     private javax.swing.JTable jTable2;
     private javax.swing.JTable tabTipoServicos;
     private javax.swing.JTextField txtCod;
+    private javax.swing.JTextField txtCodCli;
     private javax.swing.JTextField txtData;
     private javax.swing.JTextField txtDescricao;
     private javax.swing.JTextField txtQtd;
