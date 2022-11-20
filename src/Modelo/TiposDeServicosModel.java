@@ -7,25 +7,25 @@ package Modelo;
  *
  * @author anderson
  */
-public class TiposDeServicos {
+public class TiposDeServicosModel {
    
     // Os atributos
     private String codTipoServicos;
-    private String nome;
+    private String codCliente;
     private String Descricao;
-    private double Qtd;
+    private int Qtd;
     private double valorUnit;
     private double valorTotal;
     private String Data;
    
     // construtor vazio
-    public TiposDeServicos(){
+    public TiposDeServicosModel(){
         
     }
     // construtor com parametros
-    public TiposDeServicos(String codTipoServicos, String nome, String Descricao,double qtd, double valorUnit, double valorTotal, String Data) {
+    public TiposDeServicosModel(String codTipoServicos, String codCli, String Descricao,int qtd, double valorUnit, double valorTotal, String Data) {
         this.codTipoServicos = codTipoServicos;
-        this.nome = nome;
+        this.codCliente = codCli;
         this.Descricao = Descricao;
         this.Qtd=qtd;
         this.valorUnit = valorUnit;
@@ -50,20 +50,7 @@ public class TiposDeServicos {
         this.codTipoServicos = codTipoServicos;
     }
 
-    /**
-     * @return the nome
-     */
-    public String getNome() {
-        return nome;
-    }
-
-    /**
-     * @param nome the nome to set
-     */
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
+    
     /**
      * @return the Descricao
      */
@@ -123,15 +110,29 @@ public class TiposDeServicos {
     /**
      * @return the Qtd
      */
-    public double getQtd() {
+    public int getQtd() {
         return Qtd;
     }
 
     /**
      * @param Qtd the Qtd to set
      */
-    public void setQtd(double Qtd) {
+    public void setQtd(int Qtd) {
         this.Qtd = Qtd;
+    }
+
+    /**
+     * @return the codCliente
+     */
+    public String getCodCliente() {
+        return codCliente;
+    }
+
+    /**
+     * @param codCliente the codCliente to set
+     */
+    public void setCodCliente(String codCliente) {
+        this.codCliente = codCliente;
     }
     
     
