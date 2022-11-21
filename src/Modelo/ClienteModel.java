@@ -1,4 +1,5 @@
 
+/* Essa classe vai modela para tipo de cliente*/
 package Modelo;
 
 /**
@@ -13,6 +14,7 @@ public class ClienteModel {
     private String nome;
     private String endereco;
     private String telefone;
+    private int codUsuario;  // atributo para pegar o código do usuário
     //Os Métodos gettres e settres  
     public int getCodCli() {
         return codCli;
@@ -58,6 +60,20 @@ public class ClienteModel {
    
     public void setTelefone(String telefone) {
         this.telefone = telefone;
+    }
+
+    /**
+     * @return the codUsuario
+     */
+    public int getCodUsuario() {
+        return codUsuario;
+    }
+
+    /**
+     * @param codUsuario the codUsuario to set
+     */
+    public void setCodUsuario(int codUsuario) {
+        this.codUsuario = codUsuario;
     }
     
     

@@ -27,16 +27,14 @@ public class UsuarioDao {
        
         try {
             //Inserindo os dados do usuario no banco de dados;
-            String sql="insert into usuario(nome,endereco,telefone,login,senha) values(?,?,?,?,?)";
+            String sql="insert into usuario(nome,login,senha) values(?,?,?)";
              
             PreparedStatement patm = conn.prepareStatement(sql);
             //Passando como paramentros os atributos do USUARIO da classe UsuarioModel;
            
             patm.setString(1, usuario.getNome());
-            patm.setString(2, usuario.getEndereco());
-            patm.setString(3, usuario.getTelefone());
-            patm.setString(4, usuario.getLogin());
-            patm.setString(5, usuario.getSenha());
+            patm.setString(2, usuario.getLogin());
+            patm.setString(3, usuario.getSenha());
             
             //Executar;
             int upd=patm.executeUpdate();

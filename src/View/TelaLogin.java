@@ -7,6 +7,7 @@ package View;
 
 import Conexao.Conexao_BD;
 import Dao.Daologin;
+import Modelo.CodigoGlobal;
 import java.awt.Color;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -39,8 +40,8 @@ public class TelaLogin extends javax.swing.JFrame {
         
         //variavel para pegar a senha do usuario no banco
         String senha="";
-        
-       
+        // variável para lista o código do usuário
+       String codigoUsuario="";
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -53,6 +54,7 @@ public class TelaLogin extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         txtsenha = new javax.swing.JPasswordField();
         mostra = new javax.swing.JCheckBox();
+        btCadastro = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Acessar Sistema");
@@ -117,6 +119,13 @@ public class TelaLogin extends javax.swing.JFrame {
             }
         });
 
+        btCadastro.setText("Se encontar sem cadastror Cadastre-se!");
+        btCadastro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btCadastroActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -126,8 +135,8 @@ public class TelaLogin extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(206, 206, 206)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(18, 18, 18)
@@ -138,11 +147,13 @@ public class TelaLogin extends javax.swing.JFrame {
                                 .addGap(90, 90, 90)
                                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(530, 530, 530)
+                        .addGap(332, 332, 332)
+                        .addComponent(mostra)
+                        .addGap(139, 139, 139)
                         .addComponent(BTLOGIN, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(332, 332, 332)
-                        .addComponent(mostra)))
+                        .addGap(53, 53, 53)
+                        .addComponent(btCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(136, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -160,9 +171,15 @@ public class TelaLogin extends javax.swing.JFrame {
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(mostra)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(BTLOGIN, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(40, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(BTLOGIN, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+                        .addComponent(btCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(23, 23, 23))))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -187,43 +204,46 @@ public class TelaLogin extends javax.swing.JFrame {
 
     private void BTLOGINActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTLOGINActionPerformed
       
-        //depois termino
-         boolean onclik;
-        boolean clik;
-        
-        boolean cor;
+       
+         boolean onclik,clik,cor;
+   
          onclik=(txtUSUARIO.getText().isEmpty());
          
          clik=(txtsenha.getText().isEmpty());
          
          cor=(onclik && clik);
+         
+         // Instânciando a classe DaoLogin para criar um novo objeto
           Daologin lg = new Daologin();
-          
+            // condição para saber o campo de usuario e senha está vazio
               if(cor){
                   txtUSUARIO.setBackground(Color.GREEN);
                    txtsenha.setBackground(Color.GREEN);
                    JOptionPane.showMessageDialog(null, "Preencha os campos!");
              }
-          
+            // condição para saber o campo de usuario está vazio
             else  if(onclik){
                   JOptionPane.showMessageDialog(null, "Preencha campo de login!","Por favor:",JOptionPane.WARNING_MESSAGE);
                   txtUSUARIO.setBackground(Color.red);
                     txtUSUARIO.requestFocus();
-                  
+                    // condição para saber o campo de senha está vazio
              }else if(clik){
                  JOptionPane.showMessageDialog(null, "Preencha campo de senha!","Por favor:",JOptionPane.WARNING_MESSAGE);
                   txtsenha.setBackground(Color.red);
                     txtsenha.requestFocus();
              }
-             
+             // condição para verificar se esses dados tem no banco de dados
              else if(lg.logar(txtUSUARIO.getText(), txtsenha.getText())){
-                
-                  //Instânciando view  TelaPrincipal;
-         //   TelaPrincipal tp = new TelaPrincipal();
-            //Passando objeto para abrir TelaPrincipal ao Logar;
-          //  tp.setVisible(true);
-            //Fechando a  TelaLgin;
-            this.dispose();
+                // Instânciando a classe CodigoGlobal para receber o código do usuário
+                 CodigoGlobal cdg = new CodigoGlobal();
+                 cdg.setCodigo((lg.setaCodigoDoUsuario(txtUSUARIO.getText(), txtsenha.getText())));
+             
+              //Instânciando view  TelaPrincipal;
+                TelaInicial tp = new TelaInicial();
+              //Passando objeto para abrir TelaPrincipal ao Logar;
+              tp.setVisible(true);
+                //Fechando a  TelaLgin;
+               this.dispose();
             }else{
                  JOptionPane.showMessageDialog(null, "Usuário ou Senha Incorreta!");
             }
@@ -283,6 +303,12 @@ public class TelaLogin extends javax.swing.JFrame {
         
         
     }//GEN-LAST:event_txtsenhaKeyPressed
+
+    private void btCadastroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCadastroActionPerformed
+            
+        Usuario usu = new Usuario();
+        usu.setVisible(true);
+    }//GEN-LAST:event_btCadastroActionPerformed
     
       //Método para seta usuário e senha  dos usuários para logar;
     public boolean logarNoSistema() {
@@ -348,6 +374,7 @@ public class TelaLogin extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BTLOGIN;
+    private javax.swing.JButton btCadastro;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

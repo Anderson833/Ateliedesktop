@@ -58,5 +58,44 @@ public class Daologin  extends Conexao_BD {
             return clicar;
     }
     
+     //MÉTODO PARA LISTA CÓDIGO DO USUÁRIO PELO USUARIO E SENHA
+    public String setaCodigoDoUsuario(String usuario,String senha){
+        
+        //Instânciando conexão com classe Conexso_BD;
+        Connection conn=Conexao_BD.getConnection();
+    
+         boolean clicar=false;
+          String codigo="";
+         
+          try{
+             //Comando para selecionar usuário e senha no banco de dados;
+             String sql="select codUsuario from usuario where login=? and senha=? ";
+             
+             PreparedStatement patm = conn.prepareStatement(sql);
+             patm.setString(1,usuario);
+             patm.setString(2,senha);
+             
+             ResultSet rst =patm.executeQuery();
+             
+             if(rst.next()){
+                 codigo=rst.getString("codUsuario");
+             } else {
+            }
+   
+           //Fechando conexão PreparedStatement;
+           patm.close();
+          
+           //Fechando conexão Connection;
+           conn.close();
+          
+        } catch (Exception ex) {
+            //Caso ocorrer aldo errado mostrar essa mensagem;
+            JOptionPane.showMessageDialog(null, "Error ao Logar");
+        }
+
+    
+            return codigo;
+    }
+    
     
 }

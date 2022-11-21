@@ -8,6 +8,7 @@ package View;
 import Conexao.Conexao_BD;
 import Dao.ClienteDao;
 import Modelo.ClienteModel;
+import Modelo.CodigoGlobal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -30,12 +31,12 @@ public class Cliente extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         //Método para proíbir letras
        
-        visualizarClientes();
+    //    visualizarClientes();
        
     }
      int c=0;
      String codCliente="";
-     String IdUsuario="";
+     String CodigoUsuario="";
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -279,13 +280,15 @@ public class Cliente extends javax.swing.JFrame {
 
     private void AddClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddClienteActionPerformed
      
-       addCliente();
-       visualizarClientes();
+       addClientePeloCodigoDoUsuario();
+      //   visualizarClientes();
     }//GEN-LAST:event_AddClienteActionPerformed
   
-    //Método para adicionar cliente;
-    public void addCliente() {
-
+    //Método para adicionar cliente pelo código do usuário;
+    public void addClientePeloCodigoDoUsuario() {
+        //método para pegar o código do usuário no banco de dados
+        buscandoCodigoDosUsuarios();
+        
         //Instânciando classe ClienteDao;
         ClienteDao dao = new ClienteDao();
 
@@ -297,19 +300,39 @@ public class Cliente extends javax.swing.JFrame {
         cli.setNome(txtNome.getText());
         cli.setEndereco(txtEndereco.getText());
         cli.setTelefone(txtTelefone.getText());
-      
+        cli.setCodUsuario(Integer.parseInt(CodigoGlobal.codigo()));
+
+        //Colocando os objetos da Classe ClienteModel no objeto da classe ClienteDAO;
+        dao.adicionaClientePeloUsuario(cli);
+    }
+  //Método para adicionar cliente;
+ /*   public void addCliente() {
+        
+        buscandoCodigoDosUsuarios();
+        
+        //Instânciando classe ClienteDao;
+        ClienteDao dao = new ClienteDao();
+
+        //Instânciando  classe ClienteModel;
+        ClienteModel cli = new ClienteModel();
+
+        //Pegando objeto da classe ClienteModel;
+        //Setando os atributos  da Classe ClienteModel;
+        cli.setNome(txtNome.getText());
+        cli.setEndereco(txtEndereco.getText());
+        cli.setTelefone(txtTelefone.getText());
+        cli.setCodUsuario(Integer.parseInt(CodigoUsuario));
 
         //Colocando os objetos da Classe ClienteModel no objeto da classe ClienteDAO;
         dao.adicionaCliente(cli);
     }
-
-
+*/
     private void deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteActionPerformed
 
         //Método Para Deletar Cliente no Banco de Dados;
         deletarCliente();
         
-        visualizarClientes();
+      //  visualizarClientes();
     }//GEN-LAST:event_deleteActionPerformed
 
     //Método Para Deletar Cliente no Banco de Dados;
@@ -328,13 +351,16 @@ public class Cliente extends javax.swing.JFrame {
 
     private void exibirDadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exibirDadosActionPerformed
 
-        //Método para visualizar dados dos Clientes;
-        visualizarClientes();
-
+        //Método para lista dados dos Clientes pelo código do usuário;
+      //  visualizarClientes();
+       listaClientesPeloUsuario();
+       
+   
+       JOptionPane.showMessageDialog(null, ""+CodigoGlobal.codigo());
     }//GEN-LAST:event_exibirDadosActionPerformed
 
     //Método para visualizar toda tabela cliente;
-    public void visualizarClientes() {
+ /*   public void visualizarClientes() {
         DefaultTableModel md = (DefaultTableModel) tabelaCli.getModel();
         //Método para não repetir os dados ao visualizar;
         md.setNumRows(0);
@@ -357,13 +383,40 @@ public class Cliente extends javax.swing.JFrame {
         }
 
     }
-  
+  */
+      //Método para lista toda tabela cliente pelo código do usuário;
+    public void listaClientesPeloUsuario() {
+        DefaultTableModel md = (DefaultTableModel) tabelaCli.getModel();
+        //Método para não repetir os dados ao lista;
+        md.setNumRows(0);
+        // MÉTODO PARA LISTA TODOS CÓDIGOS DO USUÁRIO
+         buscandoCodigoDosUsuarios();
+        
+        //Instânciando a classe ClienteDao;
+        ClienteDao dao = new ClienteDao();
+
+        //laço de repetição para lista todos clientes no banco de dados;
+        for (ClienteModel cliente : dao.listaClientesPeloCodigoDoUsuario(CodigoGlobal.codigo())) {
+            md.addRow(new Object[]{
+                //Percorrendo a lista de clientes;
+                cliente.getCodCli(),
+                cliente.getNome(),
+                cliente.getEndereco(),
+                cliente.getTelefone(),
+             
+
+            });
+
+        }
+
+    }
+    
     
 
     private void btAtualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAtualizarActionPerformed
         //Método que atualizar os dados dos clientes; 
         atualizarCliente();
-      visualizarClientes();
+     // visualizarClientes();
     }//GEN-LAST:event_btAtualizarActionPerformed
 
     //Método para atualizar cliente;
@@ -470,42 +523,7 @@ public class Cliente extends javax.swing.JFrame {
         }
     }
 
-      // método para  ver se tem código ja  salvo ao adicionar um cliente novo;
-    public boolean buscandoCodigoDosClientes() {
-
-        try {
-            Connection Conn = Conexao_BD.getConnection();
-
-            //Comando para selecionar o código que já tem no banco de dados;
-            String sql = "SELECT codCli FROM cliente";
-
-            PreparedStatement Patm = Conn.prepareStatement(sql);
-
-            //Executar
-            ResultSet Rst = Patm.executeQuery();
-
-            if (Rst.next()) {
-                //setando codigo 
-                codCliente = Rst.getString("codCli");
-                
-            }
-
-            //Fechando conexão ResultSet;
-            Rst.close();
-
-            //Fechando conexão PreparedStatement;
-            Patm.close();
-
-            //Fechando conexão Connection;
-            Conn.close();
-
-        } catch (SQLException e) {
-            //caso de algo errado exiber essa mensagem;
-            JOptionPane.showMessageDialog(null, " código não encontrado ! ");
-        }
-        return true;
-
-    }
+    
      // método para  ver se tem usuário com o código salvo 
     public boolean buscandoCodigoDosUsuarios() {
 
@@ -513,7 +531,7 @@ public class Cliente extends javax.swing.JFrame {
             Connection Conn = Conexao_BD.getConnection();
 
             //Comando para selecionar o código de usuário;
-            String sql = "SELECT IdUsu  FROM usuario";
+            String sql = "SELECT codUsuario  FROM usuario";
 
             PreparedStatement Patm = Conn.prepareStatement(sql);
 
@@ -522,7 +540,7 @@ public class Cliente extends javax.swing.JFrame {
 
             if (Rst.next()) {
                 //setando codigo 
-                IdUsuario = Rst.getString("IdUsu");
+                CodigoUsuario = Rst.getString("codUsuario");
                 
             }
 
@@ -537,7 +555,7 @@ public class Cliente extends javax.swing.JFrame {
 
         } catch (SQLException e) {
             //caso de algo errado exiber essa mensagem;
-            JOptionPane.showMessageDialog(null, " código não encontrado ! ");
+            JOptionPane.showMessageDialog(null, " código do usuário não encontrado ! ");
         }
         return true;
 

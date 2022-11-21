@@ -304,8 +304,8 @@ public class Usuario extends javax.swing.JFrame {
         UsuarioModel usu = new UsuarioModel();
         //Setando os atributos do UsuarioModel;
         usu.setNome(txtnome.getText());
-        usu.setEndereco(txtendereco.getText());
-        usu.setTelefone(txttelefone.getText());
+        //usu.setEndereco(txtendereco.getText());
+        //usu.setTelefone(txttelefone.getText());
         usu.setLogin(txtUsuario.getText());
         usu.setSenha(txtSenha.getText());
         //Passando os objetos do UsuarioModel para objeto UsuarioDao;

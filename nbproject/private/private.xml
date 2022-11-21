@@ -4,10 +4,8 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/ander/OneDrive/Documentos/NetBeansProjects/ateliefit/src/View/TiposDeServicos.java</file>
-            <file>file:/C:/Users/ander/OneDrive/Documentos/NetBeansProjects/ateliefit/src/Dao/ClienteDao.java</file>
-            <file>file:/C:/Users/ander/OneDrive/Documentos/NetBeansProjects/ateliefit/src/Modelo/TiposDeServicosModel.java</file>
-            <file>file:/C:/Users/ander/OneDrive/Documentos/NetBeansProjects/ateliefit/src/Dao/TiposDeServicosDao.java</file>
             <file>file:/C:/Users/ander/OneDrive/Documentos/NetBeansProjects/ateliefit/src/View/TelaInicial.java</file>
+            <file>file:/C:/Users/ander/OneDrive/Documentos/NetBeansProjects/ateliefit/src/Modelo/ClienteModel.java</file>
         </group>
     </open-files>
 </project-private>

@@ -555,8 +555,7 @@ public class TiposDeServicos extends javax.swing.JFrame {
                
          //Antes de alterar vai seta o código do cliente pelo nome do cliente escolhido
          setaCodigoDoCliente();
-         
-        
+     
         //Método para alterar o tipo de serviço
         alterarTipoDeServico();
          }
@@ -583,7 +582,8 @@ public class TiposDeServicos extends javax.swing.JFrame {
         }
            // A variável vai armazenar o código do tipo de serviço
           codigotiposervico=txtCod.getText();
-         funcao();
+          // Método para realizar a exibição do nome do cliente no jcombox 
+             funcao();
     }//GEN-LAST:event_tabTipoServicosMouseClicked
 
     //Método para realiza a escolha o nome do cliente ao clicar com mouse
