@@ -11,10 +11,10 @@ public class UsuarioModel {
     
     private int idUsu;
     private String nome;
-    private String endereco;
-    private String telefone;
     private String login;
     private String senha;
+    private String CodAssinate;
+    private String perfil;
 
      //Métodos get e set
     public String getNome() {
@@ -24,26 +24,6 @@ public class UsuarioModel {
     
     public void setNome(String nome) {
         this.nome = nome;
-    }
-
-   
-    public String getEndereco() {
-        return endereco;
-    }
-
-    
-    public void setEndereco(String endereco) {
-        this.endereco = endereco;
-    }
-
-    
-    public String getTelefone() {
-        return telefone;
-    }
-
-   
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
     }
     
     
@@ -76,6 +56,34 @@ public class UsuarioModel {
     @Override
     public String toString() {
         return String.valueOf(this.getIdUsu());
+    }
+
+    /**
+     * @return the CodAssinate
+     */
+    public String getCodAssinate() {
+        return CodAssinate;
+    }
+
+    /**
+     * @param CodAssinate the CodAssinate to set
+     */
+    public void setCodAssinate(String CodAssinate) {
+        this.CodAssinate = CodAssinate;
+    }
+
+    /**
+     * @return the perfil
+     */
+    public String getPerfil() {
+        return perfil;
+    }
+
+    /**
+     * @param perfil the perfil to set
+     */
+    public void setPerfil(String perfil) {
+        this.perfil = perfil;
     }
      
 }

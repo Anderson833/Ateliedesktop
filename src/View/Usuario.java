@@ -2,6 +2,7 @@
 package View;
 
 import Conexao.Conexao_BD;
+import Dao.Daologin;
 import Dao.UsuarioDao;
 import Modelo.UsuarioModel;
 import java.sql.Connection;
@@ -135,11 +136,11 @@ public class Usuario extends javax.swing.JFrame {
 
             },
             new String [] {
-                "idUsu", "nome", "endereco", "telefone", "login", "senha"
+                "idUsu", "nome", "login", "senha"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -287,27 +288,58 @@ public class Usuario extends javax.swing.JFrame {
     private void adicionarCliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adicionarCliActionPerformed
           
      
-           //MÉTODO PARA ADICIONA USUARIO NO BANCO DE DADOS;
-        addUsuario();
-          visualizarUsuario();
-       
+         // Instânciando a classe DaoLogin para criar um novo objeto
+          Daologin lg = new Daologin();
+        
+          // Passando o objeto do tipo lg com código para variável codigoUsu
+        String codigoUsu=lg.setaCodigoDoUsuario(txtUsuario.getText(), txtSenha.getText());
+                JOptionPane.showMessageDialog(null,"Código do usuario "+codigoUsu);
+
+      // Passando a variavel codigoUsu com código  do assinante para o objeto lg seguinte para lista o nome do assinante
+           String nomeDoAssinante=lg.setaNomeDoAssisnate(codigoUsu);
+        JOptionPane.showMessageDialog(null,"nome do assinante "+nomeDoAssinante);
+
+           /* Passando a variável do tipo nomeDoAssinante com nome do assinante para o objeto lg seguinte 
+               para lista o valor de suspender */
+       String suspender=lg.setaSuspendeDoAssisnante(nomeDoAssinante);
+            JOptionPane.showMessageDialog(null,"numero do suspender "+suspender);
+           
+             if(codigoUsu==null){
+              JOptionPane.showMessageDialog(null,"salva em visitante");   
+              String nome="Joelma",perf="visitante";
+              lg.adicionaVisitante(nome, txtUsuario.getText(),txtSenha.getText(), perf);
+             }else{
+                  //MÉTODO PARA ADICIONA USUARIO NO BANCO DE DADOS;
+                 addUsuario();
+                 visualizarUsuario(); 
+             }
        
     }//GEN-LAST:event_adicionarCliActionPerformed
 
     //Método para adicionar usuario;
     public void addUsuario() {
-
+       // Instância da classe Daoligin para criar um objeto
+         Daologin dl = new Daologin();
+         // Passando objeto com código do assinante para a váriavel código
+      String codigo= dl.listaCodigoDoAssinante();
+      
+      // Passando  objeto com nome  do assinante pelo código recebido no paramentro
+      String nome= dl.setaNomeDoAssisnate(codigo);
+         
+      //Passando o objeto com perfil do assinante pelo código recebi no paaramentro
+       String perfil=dl.setaPerfilDoAssinante(codigo);
         //Instânciando UsuarioDao;
         UsuarioDao dao = new UsuarioDao();
 
         //Instânciando UsuarioModdel;
         UsuarioModel usu = new UsuarioModel();
-        //Setando os atributos do UsuarioModel;
-        usu.setNome(txtnome.getText());
-        //usu.setEndereco(txtendereco.getText());
-        //usu.setTelefone(txttelefone.getText());
+        //Setando os atributos do objeto  usu;
+        usu.setIdUsu(Integer.parseInt(codigo));
+        usu.setNome(nome);
         usu.setLogin(txtUsuario.getText());
         usu.setSenha(txtSenha.getText());
+        usu.setPerfil(perfil);
+        usu.setCodAssinate(codigo);
         //Passando os objetos do UsuarioModel para objeto UsuarioDao;
         dao.adicionaUsuario(usu);
 
@@ -339,8 +371,6 @@ public class Usuario extends javax.swing.JFrame {
             //Setando os atributos do UsuarioModel;
             usu.setIdUsu(Integer.parseInt(txtIDusu.getText()));
             usu.setNome(txtnome.getText());
-            usu.setEndereco(txtendereco.getText());
-            usu.setTelefone(txttelefone.getText());
             usu.setLogin(txtUsuario.getText());
             usu.setSenha(txtSenha.getText());
             //Passando os objetos do UsuarioModel para objeto UsuarioDao;
@@ -349,6 +379,9 @@ public class Usuario extends javax.swing.JFrame {
         }
 
     }
+    
+     
+    
     // método para  ver se tem usuário com meus código é id;
     public boolean buscandoCodigoDosUsuarios() {
 
@@ -408,8 +441,7 @@ public class Usuario extends javax.swing.JFrame {
                modelo.addRow(new Object[]{
                usuario.getIdUsu(),
                usuario.getNome(),
-               usuario.getEndereco(),
-               usuario.getTelefone(),
+              
                usuario.getLogin(),
                usuario.getSenha()
                
@@ -427,10 +459,8 @@ public class Usuario extends javax.swing.JFrame {
 
             txtIDusu.setText(tbusu.getValueAt(tbusu.getSelectedRow(), 0).toString());
             txtnome.setText(tbusu.getValueAt(tbusu.getSelectedRow(), 1).toString());
-            txtendereco.setText(tbusu.getValueAt(tbusu.getSelectedRow(), 2).toString());
-            txttelefone.setText(tbusu.getValueAt(tbusu.getSelectedRow(), 3).toString());
-            txtUsuario.setText(tbusu.getValueAt(tbusu.getSelectedRow(), 4).toString());
-            txtSenha.setText(tbusu.getValueAt(tbusu.getSelectedRow(), 5).toString());
+            txtUsuario.setText(tbusu.getValueAt(tbusu.getSelectedRow(), 2).toString());
+            txtSenha.setText(tbusu.getValueAt(tbusu.getSelectedRow(), 3).toString());
 
         }
 

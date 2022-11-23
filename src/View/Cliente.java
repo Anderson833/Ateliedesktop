@@ -279,9 +279,11 @@ public class Cliente extends javax.swing.JFrame {
     }//GEN-LAST:event_txtTelefoneActionPerformed
 
     private void AddClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddClienteActionPerformed
-     
+       //Método para adicionar cliente pelo código do usuário;
        addClientePeloCodigoDoUsuario();
       //   visualizarClientes();
+      //método para lista todos cliente pelo código do usuário
+       listaClientesPeloUsuario();
     }//GEN-LAST:event_AddClienteActionPerformed
   
     //Método para adicionar cliente pelo código do usuário;
@@ -353,10 +355,12 @@ public class Cliente extends javax.swing.JFrame {
 
         //Método para lista dados dos Clientes pelo código do usuário;
       //  visualizarClientes();
+      
+      //método para lista todos cliente pelo código do usuário
        listaClientesPeloUsuario();
        
    
-       JOptionPane.showMessageDialog(null, ""+CodigoGlobal.codigo());
+       JOptionPane.showMessageDialog(null, "Seu Código Usuário é :"+CodigoGlobal.codigo());
     }//GEN-LAST:event_exibirDadosActionPerformed
 
     //Método para visualizar toda tabela cliente;

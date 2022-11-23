@@ -27,14 +27,17 @@ public class UsuarioDao {
        
         try {
             //Inserindo os dados do usuario no banco de dados;
-            String sql="insert into usuario(nome,login,senha) values(?,?,?)";
+            String sql="insert into usuario(codUsuario,nome,login,senha,perfil,codLogin) values(?,?,?,?,?,?)";
              
             PreparedStatement patm = conn.prepareStatement(sql);
             //Passando como paramentros os atributos do USUARIO da classe UsuarioModel;
            
-            patm.setString(1, usuario.getNome());
-            patm.setString(2, usuario.getLogin());
-            patm.setString(3, usuario.getSenha());
+            patm.setInt(1, usuario.getIdUsu());
+            patm.setString(2, usuario.getNome());
+            patm.setString(3, usuario.getLogin());
+            patm.setString(4, usuario.getSenha());
+            patm.setString(5, usuario.getPerfil());
+            patm.setString(6, usuario.getCodAssinate());
             
             //Executar;
             int upd=patm.executeUpdate();
@@ -86,10 +89,9 @@ public class UsuarioDao {
                  //Setando os Valores;
                 usuario.setIdUsu(rst.getInt("codUsuario"));
                 usuario.setNome(rst.getString("nome"));
-                usuario.setEndereco(rst.getString("endereco"));
-                usuario.setTelefone(rst.getString("telefone"));
                 usuario.setLogin(rst.getString("login"));
                 usuario.setSenha(rst.getString("senha"));
+               
                  
                  //Adicionado na Lista;
                  listUsuario.add(usuario);
@@ -162,18 +164,16 @@ public class UsuarioDao {
                try {
            
           //Comando para  realizar atualização dos dados do usuario no banco de dados;
-            String sql="UPDATE usuario SET nome=?,endereco=?, telefone=?, login=?,senha=? WHERE codUsuario=?";
+            String sql="UPDATE usuario SET nome=?, login=?,senha=? WHERE codUsuario=?";
             
             
             
             PreparedStatement patm = conn.prepareStatement(sql);
             //Passandos valores nos paramentros;
             patm.setString(1, usuario.getNome());
-            patm.setString(2,usuario.getEndereco());
-            patm.setString(3,usuario.getTelefone());
-            patm.setString(4,usuario.getLogin());
-            patm.setString(5,usuario.getSenha());
-            patm.setInt(6,usuario.getIdUsu());
+            patm.setString(2,usuario.getLogin());
+            patm.setString(3,usuario.getSenha());
+            patm.setInt(4,usuario.getIdUsu());
             //Executar;
              int res= patm.executeUpdate();
             
